@@ -426,7 +426,7 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <button
             onClick={onBack}
@@ -437,7 +437,7 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <button
             onClick={deleteVehicle}
             className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -508,7 +508,7 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
             </div>
           ))}
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               placeholder="Nombre del repuesto"
@@ -568,7 +568,7 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
             </div>
           ))}
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               placeholder="Descripción del trabajo"

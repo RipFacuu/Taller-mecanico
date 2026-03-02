@@ -122,12 +122,12 @@ export function DashboardSummary({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
-        <TrendingUp className="w-5 h-5 text-blue-600" />
+      <h2 className="text-lg sm:text-xl font-semibold text-slate-900 flex items-center gap-2">
+        <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
         Resumen General del Taller
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -136,7 +136,7 @@ export function DashboardSummary({
                 ${saldoPendiente.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </p>
             </div>
-            <DollarSign className="w-8 h-8 text-red-500 opacity-70" />
+            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 opacity-70" />
           </div>
         </div>
 
@@ -148,7 +148,7 @@ export function DashboardSummary({
                 ${totalPagado.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </p>
             </div>
-            <DollarSign className="w-8 h-8 text-green-500 opacity-70" />
+            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 opacity-70" />
           </div>
         </div>
 
@@ -160,7 +160,7 @@ export function DashboardSummary({
                 ${totalPresupuestado.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </p>
             </div>
-            <TrendingUp className="w-8 h-8 text-blue-500 opacity-70" />
+            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 opacity-70" />
           </div>
         </div>
 
@@ -173,7 +173,7 @@ export function DashboardSummary({
                 Sobre un total de {vehicles.length} vehículos
               </p>
             </div>
-            <Users className="w-8 h-8 text-slate-400 opacity-70" />
+            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400 opacity-70" />
           </div>
         </div>
       </div>

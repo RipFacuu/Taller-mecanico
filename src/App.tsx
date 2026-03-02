@@ -71,23 +71,25 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-white/10 p-3 rounded-lg">
-                <Wrench className="w-8 h-8" />
+              <div className="bg-white/10 p-2.5 sm:p-3 rounded-lg">
+                <Wrench className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold">Taller Mecánico</h1>
-                <p className="text-blue-100 text-sm">Sistema de Gestión Profesional</p>
+                <h1 className="text-xl sm:text-3xl font-bold">Taller Mecánico</h1>
+                <p className="text-blue-100 text-xs sm:text-sm">
+                  Sistema de Gestión Profesional
+                </p>
               </div>
             </div>
             <button
               onClick={() => setShowForm(true)}
-              className="flex items-center gap-2 bg-white text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-semibold shadow-md"
+              className="self-stretch sm:self-auto inline-flex items-center justify-center gap-2 bg-white text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-semibold shadow-md text-sm sm:text-base"
             >
               <Plus className="w-5 h-5" />
-              <span className="hidden sm:inline">Nuevo Ingreso</span>
+              <span>Nuevo Ingreso</span>
             </button>
           </div>
         </div>
