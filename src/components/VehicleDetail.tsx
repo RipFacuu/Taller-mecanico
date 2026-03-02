@@ -25,7 +25,7 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
 
   const [newRepuesto, setNewRepuesto] = useState({ nombre: '', precio: '' });
   const [newManoObra, setNewManoObra] = useState({ descripcion: '', precio: '' });
-  const [newPago, setNewPago] = useState('');
+  const [newPago, setNewPago] = useState({ monto: '', metodo_pago: 'Efectivo' });
 
   useEffect(() => {
     loadData();
@@ -125,20 +125,21 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
   };
 
   const addPago = async () => {
-    if (!newPago) return;
+    if (!newPago.monto || !newPago.metodo_pago) return;
 
     try {
       const { error } = await supabase.from('pagos').insert([
         {
           vehicle_id: vehicle.id,
-          monto: parseFloat(newPago),
+          monto: parseFloat(newPago.monto),
+          metodo_pago: newPago.metodo_pago,
           fecha: new Date().toISOString(),
         },
       ]);
 
       if (error) throw error;
 
-      setNewPago('');
+      setNewPago({ monto: '', metodo_pago: 'Efectivo' });
       loadData();
     } catch (error) {
       console.error('Error adding pago:', error);
@@ -160,6 +161,23 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
   const totalPresupuesto = totalRepuestos + totalManoObra;
   const totalPagado = pagos.reduce((sum, pago) => sum + Number(pago.monto), 0);
   const saldoPendiente = totalPresupuesto - totalPagado;
+
+  const deleteVehicle = async () => {
+    const confirmed = window.confirm(
+      '¿Seguro que querés eliminar este vehículo? Se borrarán también sus repuestos, mano de obra y pagos.',
+    );
+    if (!confirmed) return;
+
+    try {
+      const { error } = await supabase.from('vehicles').delete().eq('id', vehicle.id);
+      if (error) throw error;
+      onUpdate();
+      onBack();
+    } catch (error) {
+      console.error('Error deleting vehicle:', error);
+      alert('Hubo un problema al eliminar el vehículo.');
+    }
+  };
 
   const generatePDF = () => {
     const printWindow = window.open('', '_blank');
@@ -408,22 +426,33 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver</span>
-        </button>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Volver</span>
+          </button>
+        </div>
 
-        <button
-          onClick={generatePDF}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-        >
-          <FileDown className="w-5 h-5" />
-          <span className="hidden sm:inline">Descargar Presupuesto</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={deleteVehicle}
+            className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Eliminar vehículo</span>
+          </button>
+          <button
+            onClick={generatePDF}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <FileDown className="w-5 h-5" />
+            <span className="hidden sm:inline">Descargar Presupuesto</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
@@ -592,6 +621,11 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
                     minute: '2-digit',
                   })}
                 </p>
+                {pago.metodo_pago && (
+                  <p className="text-xs text-slate-500 mt-1">
+                    Método de pago: <span className="font-medium">{pago.metodo_pago}</span>
+                  </p>
+                )}
               </div>
               <div className="flex items-center gap-3">
                 <span className="font-semibold text-green-700">
@@ -607,14 +641,25 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
             </div>
           ))}
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="number"
               placeholder="Monto del pago"
-              value={newPago}
-              onChange={(e) => setNewPago(e.target.value)}
+              value={newPago.monto}
+              onChange={(e) => setNewPago({ ...newPago, monto: e.target.value })}
               className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
             />
+            <select
+              value={newPago.metodo_pago}
+              onChange={(e) => setNewPago({ ...newPago, metodo_pago: e.target.value })}
+              className="px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+            >
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Tarjeta de débito">Tarjeta de débito</option>
+              <option value="Tarjeta de crédito">Tarjeta de crédito</option>
+              <option value="Otro">Otro</option>
+            </select>
             <button
               onClick={addPago}
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"

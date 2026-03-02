@@ -34,6 +34,7 @@
       - `id` (uuid, primary key)
       - `vehicle_id` (uuid, foreign key)
       - `monto` (decimal, monto del pago)
+      - `metodo_pago` (text, método de pago usado)
       - `fecha` (timestamp, fecha del pago)
       - `created_at` (timestamp)
 
@@ -86,6 +87,7 @@ CREATE TABLE IF NOT EXISTS pagos (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   vehicle_id uuid NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
   monto decimal(10,2) NOT NULL DEFAULT 0,
+  metodo_pago text NOT NULL DEFAULT 'Efectivo',
   fecha timestamptz DEFAULT now(),
   created_at timestamptz DEFAULT now()
 );

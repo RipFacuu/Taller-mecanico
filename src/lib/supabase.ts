@@ -44,5 +44,6 @@ export interface Pago {
   vehicle_id: string;
   monto: number;
   fecha: string;
+  metodo_pago?: string;
   created_at?: string;
 }
