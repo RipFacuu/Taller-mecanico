@@ -1,11 +1,12 @@
-import { DollarSign, TrendingUp, Users, Calendar } from 'lucide-react';
-import { Vehicle, ItemRepuesto, ItemManoObra, Pago } from '../lib/supabase';
+import { DollarSign, TrendingUp, Calendar, ArrowDownCircle, ArrowUpCircle, Wallet } from 'lucide-react';
+import { Vehicle, ItemRepuesto, ItemManoObra, Pago, Gasto } from '../lib/supabase';
 
 interface DashboardSummaryProps {
   vehicles: Vehicle[];
   repuestos: ItemRepuesto[];
   manoObra: ItemManoObra[];
   pagos: Pago[];
+  gastos: Gasto[];
 }
 
 interface VehicleFinancial {
@@ -110,13 +111,15 @@ export function DashboardSummary({
   repuestos,
   manoObra,
   pagos,
+  gastos,
 }: DashboardSummaryProps) {
   const financials = buildVehicleFinancials(vehicles, repuestos, manoObra, pagos);
 
-  const totalPresupuestado = financials.reduce((sum, f) => sum + f.presupuesto, 0);
   const totalPagado = financials.reduce((sum, f) => sum + f.pagado, 0);
   const saldoPendiente = financials.reduce((sum, f) => sum + f.saldo, 0);
-  const vehiculosConDeuda = financials.filter((f) => f.saldo > 0).length;
+
+  const totalGastos = gastos.reduce((sum, g) => sum + Number(g.monto), 0);
+  const balanceNeto = totalPagado - totalGastos;
 
   const monthlyStats = buildMonthlyStats(vehicles, pagos);
 
@@ -131,49 +134,48 @@ export function DashboardSummary({
         <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">Saldo pendiente total</p>
-              <p className="mt-1 text-2xl font-bold text-red-600">
-                ${saldoPendiente.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-              </p>
-            </div>
-            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 opacity-70" />
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500">Total cobrado</p>
+              <p className="text-sm text-slate-500">Ingresos (Cobrado)</p>
               <p className="mt-1 text-2xl font-bold text-green-600">
                 ${totalPagado.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </p>
             </div>
-            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 opacity-70" />
+            <ArrowUpCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 opacity-70" />
           </div>
         </div>
 
         <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">Total presupuestado</p>
-              <p className="mt-1 text-2xl font-bold text-slate-900">
-                ${totalPresupuestado.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+              <p className="text-sm text-slate-500">Gastos Totales</p>
+              <p className="mt-1 text-2xl font-bold text-red-600">
+                ${totalGastos.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </p>
             </div>
-            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 opacity-70" />
+            <ArrowDownCircle className="w-6 h-6 sm:w-8 sm:h-8 text-red-500 opacity-70" />
           </div>
         </div>
 
         <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">Vehículos con deuda</p>
-              <p className="mt-1 text-2xl font-bold text-slate-900">{vehiculosConDeuda}</p>
-              <p className="text-xs text-slate-500">
-                Sobre un total de {vehicles.length} vehículos
+              <p className="text-sm text-slate-500">Balance (Ganancia)</p>
+              <p className={`mt-1 text-2xl font-bold ${balanceNeto >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                ${balanceNeto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </p>
             </div>
-            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400 opacity-70" />
+            <Wallet className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 opacity-70" />
+          </div>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-500">Saldo pendiente total</p>
+              <p className="mt-1 text-2xl font-bold text-amber-600">
+                ${saldoPendiente.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 opacity-70" />
           </div>
         </div>
       </div>

@@ -47,3 +47,12 @@ export interface Pago {
   metodo_pago?: string;
   created_at?: string;
 }
+
+export interface Gasto {
+  id: string;
+  descripcion: string;
+  monto: number;
+  fecha: string;
+  esta_pago: boolean;
+  created_at?: string;
+}
