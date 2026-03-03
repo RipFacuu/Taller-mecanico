@@ -27,6 +27,13 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
   const [newManoObra, setNewManoObra] = useState({ descripcion: '', precio: '' });
   const [newPago, setNewPago] = useState({ monto: '', metodo_pago: 'Efectivo' });
 
+  const formatFechaIngreso = (fecha: string) => {
+    if (!fecha) return '';
+    const [year, month, day] = fecha.split('-');
+    if (!year || !month || !day) return fecha;
+    return `${day}/${month}/${year}`;
+  };
+
   useEffect(() => {
     loadData();
   }, [vehicle.id]);
@@ -320,7 +327,9 @@ export function VehicleDetail({ vehicle, onBack, onUpdate }: VehicleDetailProps)
                 <span class="info-label">Kilómetros:</span> ${vehicle.kilometros.toLocaleString('es-AR')} km
               </div>
               <div class="info-item">
-                <span class="info-label">Fecha Ingreso:</span> ${new Date(vehicle.fecha_ingreso).toLocaleDateString('es-AR')}
+                <span class="info-label">Fecha Ingreso:</span> ${formatFechaIngreso(
+                  vehicle.fecha_ingreso,
+                )}
               </div>
               ${
                 vehicle.reparado_por

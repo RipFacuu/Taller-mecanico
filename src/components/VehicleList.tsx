@@ -14,6 +14,12 @@ export function VehicleList({
   onSearchChange,
   onSelectVehicle,
 }: VehicleListProps) {
+  const formatFechaIngreso = (fecha: string) => {
+    if (!fecha) return '';
+    const [year, month, day] = fecha.split('-');
+    if (!year || !month || !day) return fecha;
+    return `${day}/${month}/${year}`;
+  };
   const filteredVehicles = vehicles.filter((vehicle) => {
     const search = searchTerm.toLowerCase();
     return (
@@ -72,7 +78,7 @@ export function VehicleList({
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>
-                    {new Date(vehicle.fecha_ingreso).toLocaleDateString('es-AR')}
+                    {formatFechaIngreso(vehicle.fecha_ingreso)}
                   </span>
                 </div>
               </div>
